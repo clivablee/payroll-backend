@@ -5,8 +5,8 @@ const conn = connection.createConnection({
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
     port: process.env.DB_PORT 
-
 });
+
 
 
 try {
@@ -14,10 +14,9 @@ try {
         console.log("DB connected");    
     }
 } catch (error) {
-
     console.log("Error connecting in DB", error);   
-    
 }
 
 module.exports = conn
+
 

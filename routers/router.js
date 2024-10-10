@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const {loginAuth} = require('../controllers/login_controller');
-const { dataBirthdays } = require('../controllers/dashboard_controller');
+const { dataBirthdays, dataYearsOfService } = require('../controllers/dashboard_controller');
 
 
 router.post("/login", loginAuth);   
-router.post("/dashboard", dataBirthdays);
+router.post("/birthday", dataBirthdays);
+router.post("/anniversary", dataYearsOfService);
+
 
 module.exports = router

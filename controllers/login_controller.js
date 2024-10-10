@@ -12,10 +12,17 @@ module.exports = {
                     message: "Database Error" + err,
                 })
             }else{
-                res.status(200).json({
-                    status: "Success",
-                    data: result
-                })
+                if(result.length <= 0){
+                    res.status(400).json({
+                        status: "Error",
+                        message: "No Data Found"
+                    })
+                }else{
+                    res.status(200).json({
+                        status: "Success",
+                        data: result
+                    })
+                }
             }
         })
             

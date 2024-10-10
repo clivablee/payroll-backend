@@ -10,6 +10,17 @@ module.exports = {
                 } else {
                     return callback(null, result)
                 }
-            });
-            
-}}
+            })
+    },
+
+    getYearsOfService: (callback) => {
+        const query = "SELECT employee_name, department, DATE_FORMAT(hired_date, '%M %D') as hired_date FROM employee_information WHERE MONTH(hired_date) = MONTH(CURRENT_DATE) ORDER BY DAY(hired_date) ASC";
+        conn.query(query, (err, result) => {
+                if (err) {
+                    return callback("Database Error " + err, null)
+                } else {
+                    return callback(null, result)
+                }
+            })
+    }
+}
