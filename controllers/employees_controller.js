@@ -43,32 +43,25 @@ module.exports = {
 
     dataAddEmployees: (req, res) => {
         const body = req.body
-        addEmployee(body, (err, result) => {
-            if (err) {
+        selectEmployee(body, (err, select_result) => {
+            if(select_result.length >0){
                 res.status(400).json({
                     status: "Error",
-                    message: "Database Error" + err,
+                    message: "Employee Already Exist"
                 })
             }else{
-                selectEmployee(body, (err, select_result) => {
+                addEmployee(body, (err, result) => {
                     if (err) {
                         res.status(400).json({
                             status: "Error",
-                            message: "Database Error" + err,
+                            message: "Error in Database" + err
                         })
-                    }else{
-                        if(select_result.length > 0){
-                            res.status(400).json({
-                                status: "Error",
-                                message: "Employee ID exists"
-                            })
-                        }else{
-                            res.status(200).json({
+                    } else {
+                        res.status(200).json({
                             status: "Success",
-                            data: result
-                            })
-                        }
-                    }   
+                            data: "Employee added succesfully"
+                        })
+                    }
                 })
             }
         })
