@@ -5,14 +5,15 @@ const port = process.env.port;
 const cors = require("cors");
 const router = require("./routers/router");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw({ type: 'application/json' }));
 
- 
 app.get("/test", (req, res) => {
     res.send(" World!");
 });
@@ -26,7 +27,6 @@ app.listen(port, () => {
         console.log(e);
     }
 });
-
 
 module.exports = app 
 
