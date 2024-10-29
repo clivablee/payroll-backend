@@ -12,14 +12,12 @@ module.exports = {
                     message: "Database Error" + err,
                 })
             }
-
                 if(result.length <= 0){
                     res.status(400).json({
                         status: "Error",
                         message: "No Data Found"
                     })
                 }else{
-
                     const token = jwt.sign( { 
                         emp_id: result[0].emp_id, 
                         emp_name: result[0].employee_name, 
