@@ -1,114 +1,90 @@
 const conn = require('../connections/dbConnection');
 
-
 module.exports = {
-    getAllEmployees: (callback) => {
+    getAllEmployees: async () =>  {
         const query = "SELECT emp_id, first_name, middle_name, last_name, job_title, department FROM employee_information"
-        conn.query(query, (err, result) => {
-            if (err){
-                return("Database Query Error " + err, null)
-            }
-            else{
-                return callback(null, result)
-            }
+        return new Promise((onSuccess, onError) => {
+            conn.query(query, (err, result) => {
+                if(err){
+                    onError("Database Query Error " + err, null)
+                }
+                else{
+                    onSuccess(result)
+                }
+            })
         })
     },
 
-    filterQuery: (data, callback) => {
-        let filter_query = "SELECT emp_id, employee_name, first_name, middle_name, last_name, job_title, department FROM employee_information"
-        let count_query = "SELECT COUNT(*) as total_count FROM employee_information"
-
+    filterQuery: async (data) => {
+        let filter_query = "SELECT emp_id, employee_name, first_name, middle_name, last_name, job_title, department FROM employee_information" 
         //query condition
         const query_params = []
-        const count_params = []
-            if(data.department !== "All"){
-                filter_query += " WHERE department = ?"
-                count_query += " WHERE department = ?"
-                query_params.push(data.department)
-                count_params.push(data.department)
-            }
-            if(data.department === "All" && data.active_status !== "All"){
-                filter_query += " WHERE active_status = ?"
-                count_query += " WHERE active_status = ?"
-                query_params.push(data.active_status)
-                count_params.push(data.active_status)
+        if(data.department !== "All"){
+            filter_query += " WHERE department = ?"
+            query_params.push(data.department)
+        }
+        if(data.department === "All" && data.active_status !== "All"){
+            filter_query += " WHERE active_status = ?"
+            query_params.push(data.active_status)
 
-            }else if(data.active_status !== "All"){
-                filter_query += " AND active_status = ?"
-                count_query += " AND active_status = ?"
-                query_params.push(data.active_status)
-                count_params.push(data.active_status)
-            }
+        }else if(data.active_status !== "All"){
+            filter_query += " AND active_status = ?"
+            query_params.push(data.active_status)
+        }
 
-            conn.query(count_query, count_params, (err, count_result) => {
-                if(err){
-                    return("Database Query Error " + err, null)
+        return new Promise((onSuccess, onError) => {
+            conn.query(filter_query, query_params, (err, filter_result) => {
+                if (err) {
+                    onError("Database error"+err)
+                } else {
+                    const head_count = filter_result.length
+                    onSuccess({
+                        "total_employees":head_count,
+                        "data": filter_result
+                    })
                 }
-                const head_count = count_result[0].total_count
-                conn.query(filter_query, query_params, (err, filter_result) => {
-                    if (err){
-                        return("Database Query Error " + err, null)
-                    }
-                    else{
-                        return callback(null, { "Total Employees": head_count, "Data": filter_result })
-                    }
-                })
             })
+        })
     },
 
     searchEmployeeQuery: (data, callback) => {
         let filter_query= "SELECT emp_id, employee_name, first_name, middle_name, last_name, job_title, department FROM employee_information WHERE employee_name LIKE ?"
-        let count_query = "SELECT COUNT(*) as total_count FROM employee_information WHERE employee_name LIKE ?"
-
         //query condition
         const search_employee_name = "%"+data.employee_name+"%"
-
         const query_params = [search_employee_name]
-        const count_params = [search_employee_name]
 
             if(data.department !== "All"){
                 filter_query += " AND department = ?"
-                count_query += " AND department = ?"
                 query_params.push(data.department)
-                count_params.push(data.department)
             }
 
             if(data.active_status !== "All"){
                 filter_query += " AND active_status = ?"
-                count_query += " AND active_status = ?"
                 query_params.push(data.active_status)
-                count_params.push(data.active_status)
             }
 
-        
-            conn.query(count_query, count_params, (err, count_result) => {
-                console.log(filter_query, query_params)
-                console.log(count_query, count_params)
-                if(err){
-                    console.log("error" + err)
+            conn.query(filter_query, query_params, (err, filter_result) => {
+                if (err){
                     return("Database Query Error " + err, null)
                 }
-                const head_count = count_result[0].total_count
-                conn.query(filter_query, query_params, (err, filter_result) => {
-                    if (err){
-                        return("Database Query Error " + err, null)
-                    }
-                    else{
-                        return callback(null, { "Total Employees": head_count, "Data": filter_result })
-                    }
-                })
+                else{
+                    const head_count = filter_result.length
+                    return callback(null, { "total_employees": head_count, "data": filter_result })
+                }
             })
     },
        
-    selectEmployee: (data, callback) => {
+    selectEmployee: async (data) => {
         const query = "SELECT * FROM employee_information WHERE emp_id = ?"
-        conn.query(query, [data.emp_id], (err, result) => {
-            if (err){
-                return("Database Query Error " + err, null)
-            }
-            else{   
-                return callback(null, result)
-            }
+        return new Promise((onSuccess, onError) => {
+            conn.query(query, [data], (err, result) => {
+                if (err){
+                    throw onError("Database Query Error" + err)
+                }
+                else{
+                    return onSuccess(result)
+                }
+            })
         })
     },
     addEmployee: (data, callback) => {
