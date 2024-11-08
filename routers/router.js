@@ -16,9 +16,10 @@ router.post("/logout", loggedOutUser);
 
 
 //Employee Controller Class
-router.get("/employees", new EmployeeController().index); //get all employees
-router.get("/employees/:emp_id", new EmployeeController().select); // select employee
 router.get("/employees/filter", new EmployeeController().filter)
+router.get("/employees/search", new EmployeeController().search)
+router.get("/employees/:emp_id", new EmployeeController().select); // select employee
+router.get("/employees", new EmployeeController().index); //get all employees
 
 // router.post("/addEmployee", dataAddEmployees);
 

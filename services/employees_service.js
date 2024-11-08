@@ -47,7 +47,7 @@ module.exports = {
         })
     },
 
-    searchEmployeeQuery: (data, callback) => {
+    searchEmployeeQuery: async (data, callback) => {
         let filter_query= "SELECT emp_id, employee_name, first_name, middle_name, last_name, job_title, department FROM employee_information WHERE employee_name LIKE ?"
         //query condition
         const search_employee_name = "%"+data.employee_name+"%"
@@ -63,14 +63,20 @@ module.exports = {
                 query_params.push(data.active_status)
             }
 
-            conn.query(filter_query, query_params, (err, filter_result) => {
-                if (err){
-                    return("Database Query Error " + err, null)
-                }
-                else{
+            return new Promise((onSuccess, onError) => {
+                conn.query (filter_query, query_params, (err, filter_result) => {
                     const head_count = filter_result.length
-                    return callback(null, { "total_employees": head_count, "data": filter_result })
-                }
+                    if (err){
+                        onError("Database Query Error " + err, null)   
+                    }
+                    else{
+                        onSuccess({
+                            "total_employees": head_count,
+                            
+                            "data": filter_result
+                        })
+                    }
+                })
             })
     },
        

@@ -1,5 +1,6 @@
-const { query } = require("express")
+const { query, response } = require("express")
 const { getAllEmployees, selectEmployee, addEmployee, filterQuery, searchEmployeeQuery } = require("../services/employees_service")
+const { TokenExpiredError } = require("jsonwebtoken")
 
 class EmployeeController {
     async index(req, res) { 
@@ -53,6 +54,24 @@ class EmployeeController {
             })
         }
     }
+
+    async search(req,res) {
+        try {
+            const response = await searchEmployeeQuery(req.query)
+            return res.status(200).json({
+                status: "success",
+                data: response
+            })
+        } catch (error) {
+            return res(400).json({
+                status: "error",
+                message: "error"+ error
+            })
+        }
+        
+    }
+
+
 }
 
 module.exports = {
