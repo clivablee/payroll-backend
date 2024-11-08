@@ -27,10 +27,15 @@ module.exports = {
                     res.cookie("AuthToken", token, {   //create cookie
                         httpOnly: true,
                     })
-                        
                     res.status(200).json({
                         status: "Success",
-                        data: result,
+                        data: [{
+                            emp_id: result[0].emp_id, 
+                            emp_name: result[0].last_name + ", " + (result[0].first_name).split(" ")[0],
+                            first_name: result[0].first_name,
+                            job_title: result[0].job_title,
+                            access_rights: result[0].access_rights
+                        }]
                     })
                 }
             }

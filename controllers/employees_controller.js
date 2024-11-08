@@ -54,7 +54,6 @@ class EmployeeController {
             })
         }
     }
-
     async search(req,res) {
         try {
             const response = await searchEmployeeQuery(req.query)
