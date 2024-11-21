@@ -72,6 +72,7 @@ module.exports = {
                     res.cookie("token", token, {   //create cookie
                         httpOnly: true,
                         sameSite: "None",
+                        secure: true
                     })
                     res.status(200).json({
                         status: "Success",
