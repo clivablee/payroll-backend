@@ -17,8 +17,8 @@ module.exports = {
                         status: "Error",
                         message: "No Data Found"
                     })
-                }else{
-                    const token = jwt.sign( { 
+                } else {
+                    const token = jwt.sign({ 
 
                         emp_name: result[0].employee_name, 
                         
@@ -69,8 +69,9 @@ module.exports = {
                     }, 
                         process.env.SECRET_KEY, {expiresIn: "1h"})
 
-                    res.cookie("AuthToken", token, {   //create cookie
+                    res.cookie("token", token, {   //create cookie
                         httpOnly: true,
+                        sameSite: "None",
                     })
                     res.status(200).json({
                         status: "Success",
