@@ -10,10 +10,11 @@ const { loggedInUser, loggedOutUser } = require('../controllers/drawer_controlle
 router.post("/login", loginAuth, loggedInUser);   
 router.post("/birthday", verifyToken, dataBirthdays);
 router.post("/anniversary", verifyToken, dataYearsOfService);
-
 router.post("/loggedinUser", loggedInUser);
 router.post("/logout", loggedOutUser);
+router.get("/dashboard", verifyToken)
 
+router.get("/profile", loggedInUser); // profile of employee
 
 //Employee Controller Class
 router.get("/employees/filter", new EmployeeController().filter)
