@@ -8,7 +8,19 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            'http://localhost:3000', // Development origin
+            'https://biocostech-hris.vercel.app', // Production origin
+        ];
+
+        // Allow requests with no origin (e.g., mobile apps, Postman) or match the allowed origins
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     optionSuccessStatus: 200
 }
