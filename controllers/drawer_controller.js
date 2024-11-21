@@ -12,7 +12,7 @@ module.exports = {
         })
     },
     loggedOutUser: (req, res) => {
-        res.clearCookie("AuthToken", {
+        res.clearCookie("token", {
             httpOnly: true
         })
         res.status(200).json({
