@@ -5,6 +5,7 @@ const { dataBirthdays, dataYearsOfService } = require('../controllers/dashboard_
 const { dataEmployees, dataSelectEmployees, dataAddEmployees, filterEmployees, searchEmployees, EmployeeController } = require('../controllers/employees_controller');
 const { verifyToken } = require('../authentication/token_validation');
 const { loggedInUser, loggedOutUser } = require('../controllers/drawer_controller');
+const { loadDepartment } = require('../controllers/department_controller');
 
 
 router.post("/login", loginAuth, loggedInUser);   
@@ -15,6 +16,9 @@ router.post("/logout", loggedOutUser);
 router.get("/dashboard", verifyToken)
 
 router.get("/profile", loggedInUser); // profile of employee
+
+
+router.get("/departments", loadDepartment) // load departments
 
 //Employee Controller Class
 router.get("/employees/filter", new EmployeeController().filter)

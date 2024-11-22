@@ -76,6 +76,7 @@ module.exports = {
                     })
                     res.status(200).json({
                         status: "Success",
+                        data: result[0].emp_name
                     })
                 }
             }
