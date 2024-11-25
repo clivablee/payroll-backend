@@ -6,6 +6,8 @@ const { dataEmployees, dataSelectEmployees, dataAddEmployees, filterEmployees, s
 const { verifyToken } = require('../authentication/token_validation');
 const { loggedInUser, loggedOutUser } = require('../controllers/drawer_controller');
 const { loadDepartment } = require('../controllers/department_controller');
+const multer = require('multer');
+const { imageUpload } = require('../controllers/images_controller');
 
 
 router.post("/login", loginAuth, loggedInUser);   
@@ -27,5 +29,11 @@ router.get("/employees/:emp_id", new EmployeeController().select); // select emp
 router.get("/employees", new EmployeeController().index); //get all employees
 
 // router.post("/addEmployee", dataAddEmployees);
+
+
+router.post("/employees/image", imageUpload);
+
+
+
 
 module.exports = router
