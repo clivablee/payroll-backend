@@ -30,7 +30,6 @@ router.get("/employees", new EmployeeController().index); //get all employees
 
 // router.post("/addEmployee", dataAddEmployees);
 
-
 router.post("/employees/image", imageUpload);
 
 
