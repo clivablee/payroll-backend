@@ -1,7 +1,12 @@
 const { query, response } = require("express")
 const { getAllEmployees, selectEmployee, addEmployee, filterQuery, searchEmployeeQuery } = require("../services/employees_service")
 const { TokenExpiredError } = require("jsonwebtoken")
+const { imageUpload, loadImage } = require("./images_controller")
+const multer = require("multer")
+const { load_image } = require("../services/image_service")
 
+const storage = multer.memoryStorage()
+const upload = multer({ storage })
 class EmployeeController {
     async index(req, res) { 
         try {
@@ -68,6 +73,22 @@ class EmployeeController {
             })
         }
         
+    }
+    
+
+    async add(req, res) {
+        try {
+            
+            return res.status(200).json({
+                status: "success",
+                data: imageURL
+            })
+        } catch (error) {
+            return res.status(400).json({
+                status: "Error",
+                message: "Error"+ error
+            })
+        }
     }
 
 
