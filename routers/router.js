@@ -32,8 +32,6 @@ router.get("/employees/:emp_id", new EmployeeController().select); // select emp
 router.get("/employees", new EmployeeController().index); //get all employees
 
 
-
-//added comment 
-
+// added
 
 module.exports = router
