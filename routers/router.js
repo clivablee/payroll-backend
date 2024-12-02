@@ -21,6 +21,7 @@ router.get("/profile", loggedInUser); // profile of employee
 
 router.get("/departments", loadDepartment) // load departments
 
+router.post("/employees/image", imageUpload);
 //Employee Controller Class
 router.post("/employees/create", create);
 
@@ -31,7 +32,6 @@ router.get("/employees/:emp_id", new EmployeeController().select); // select emp
 router.get("/employees", new EmployeeController().index); //get all employees
 
 
-router.post("/employees/image", imageUpload);
 
 
 

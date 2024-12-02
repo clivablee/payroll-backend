@@ -3,7 +3,6 @@ const { getAllEmployees, selectEmployee, addEmployee, filterQuery, searchEmploye
 const { TokenExpiredError } = require("jsonwebtoken")
 const { imageUpload, loadImage } = require("./images_controller")
 const multer = require("multer")
-const { load_image } = require("../services/image_service")
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage })
