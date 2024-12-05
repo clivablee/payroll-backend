@@ -72,7 +72,6 @@ module.exports = {
                     else{
                         onSuccess({
                             "total_employees": head_count,
-                            
                             "data": filter_result
                         })
                     }
@@ -93,9 +92,9 @@ module.exports = {
             })
         })
     },
-    addEmployeeQuery: async (data) => {
-        const query = "INSERT INTO employee_information (emp_id, employee_img, employee_name, first_name, middle_name, last_name, salary, basic_salary, daily_rate, hourly_rate, minute_rate) VALUES (?,  ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
+    addEmployeeQuery: async (data) => {
+        const query = "INSERT INTO employee_information (emp_id, employee_img, employee_name, first_name, middle_name, last_name, salary, basic_salary, daily_rate, hourly_rate, minute_rate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         const basic_salary = data.salary/2
         const daily_rate = data.salary/26
         const hourly_rate = daily_rate/8
@@ -109,13 +108,28 @@ module.exports = {
             middle_initial =  data.middle_name.charAt(0).toUpperCase() + "."
         }
         employee_name = data.last_name + ", " + data.first_name + " " + middle_initial
+
+        const values = [
+            data.emp_id, 
+            data.imagePath, 
+            employee_name, 
+            data.first_name, 
+            data.middle_name, 
+            data.last_name, 
+            data.salary, 
+            basic_salary, 
+            daily_rate, 
+            hourly_rate, 
+            minute_rate
+        ]
+        
         return new Promise((onSuccess, onError) => {
-        conn.query(query, [data.emp_id, data.imagePath, employee_name, data.first_name, data.middle_name, data.last_name, data.salary, basic_salary, daily_rate, hourly_rate, minute_rate], (err, result) => {
+        conn.query(query, [...values], (err, result) => {
                if (err){
-                    throw onError("Database Query Error: " + err.message)
+                    onError("Database Query Error: " + err.message)
                }
                else{
-                   onSuccess(result)
+                    onSuccess("Data has been added successfully")
                }
            })
         })

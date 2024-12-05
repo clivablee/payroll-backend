@@ -1,5 +1,5 @@
 const { query, response } = require("express")
-const { getAllEmployees, selectEmployee, addEmployee, filterQuery, searchEmployeeQuery } = require("../services/employees_service")
+const { getAllEmployees, selectEmployee, addEmployee, filterQuery, searchEmployeeQuery, addEmployeeQuery } = require("../services/employees_service")
 const { TokenExpiredError } = require("jsonwebtoken")
 const { imageUpload, loadImage } = require("./images_controller")
 const multer = require("multer")
@@ -71,16 +71,14 @@ class EmployeeController {
                 message: "error"+ error
             })
         }
-        
     }
     
-
     async add(req, res) {
         try {
-            
+            const response = await addEmployeeQuery(req.body)
             return res.status(200).json({
                 status: "success",
-                data: imageURL
+                message: response
             })
         } catch (error) {
             return res.status(400).json({
