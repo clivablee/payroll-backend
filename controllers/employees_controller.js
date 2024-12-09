@@ -1,7 +1,6 @@
 const { query, response } = require("express")
-const { getAllEmployees, selectEmployee, addEmployee, filterQuery, searchEmployeeQuery, addEmployeeQuery } = require("../services/employees_service")
+const { getAllEmployees, selectEmployee, addEmployee, filterQuery, searchEmployeeQuery, addEmployeeQuery, updateEmployeeQuery } = require("../services/employees_service")
 const { TokenExpiredError } = require("jsonwebtoken")
-const { imageUpload, loadImage } = require("./images_controller")
 const multer = require("multer")
 
 const storage = multer.memoryStorage()
@@ -34,7 +33,7 @@ class EmployeeController {
                 return res.status(200).json({
                     status: "success",
                     data: response
-                })
+                }) 
             }
         } catch (error) {
             return res.status(400).json({
@@ -75,7 +74,31 @@ class EmployeeController {
     
     async add(req, res) {
         try {
-            const response = await addEmployeeQuery(req.body)
+            const select_result = await selectEmployee(req.body.emp_id)
+            if (select_result.length > 0){
+                return res.status(400).json({
+                    status: "Error",
+                    message: "Employee ID already exist"
+                })
+            }
+            else{
+                const response = await addEmployeeQuery(req.body)
+                return res.status(200).json({
+                    status: "success",
+                    message: response
+                })
+            }
+        } catch (error) {
+            return res.status(400).json({
+                status: "Error",
+                message: "Error"+ error
+            })
+        }
+    }
+
+    async edit(req,res){
+        try {
+            const response = await updateEmployeeQuery(req.body)
             return res.status(200).json({
                 status: "success",
                 message: response
@@ -83,9 +106,11 @@ class EmployeeController {
         } catch (error) {
             return res.status(400).json({
                 status: "Error",
-                message: "Error"+ error
+                message: "Error"
             })
+            
         }
+
     }
 
 

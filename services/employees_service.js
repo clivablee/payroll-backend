@@ -1,4 +1,6 @@
 const conn = require('../connections/dbConnection');
+const FormData = require("form-data");
+const axios = require("axios");
 
 module.exports = {
     getAllEmployees: async () =>  {
@@ -84,13 +86,38 @@ module.exports = {
         return new Promise((onSuccess, onError) => {
             conn.query(query, [data], (err, result) => {
                 if (err){
-                    throw onError("Database Query Error" + err)
+                    return onError("Database Query Error" + err)
                 }
                 else{
                     return onSuccess(result)
                 }
             })
         })
+    },
+
+    image : async (req, res, next) => {
+        try {
+            const file = req.file
+            if(!file){
+                throw new Error("No file uploaded")
+            }
+            const fileformats = ["image/jpg", "image/jpeg", "image/png"]
+            if(!fileformats.includes(file.mimetype)){
+                throw new Error ("Invalid file format")
+            }
+
+            const formData = new FormData();
+            formData.append("image", file.buffer, file.originalname);
+            const response = await axios.post("http://136.158.149.110:5000/upload", formData, {
+                headers: formData.getHeaders(),
+            });
+            req.body.imagePath = response.data.filePath
+            next();
+        } catch (error) {
+            res.status(500).json({ 
+                message: "Error: " + error
+            });
+        }
     },
 
     addEmployeeQuery: async (data) => {
@@ -132,6 +159,49 @@ module.exports = {
                     onSuccess("Data has been added successfully")
                }
            })
+        })
+    },
+
+    updateEmployeeQuery: async (data) => {
+        const query = "UPDATE employee_information SET employee_name = ?, employee_img = ?, first_name = ?, middle_name = ?, last_name = ?, salary = ?, basic_salary = ?, daily_rate = ?, hourly_rate = ?, minute_rate = ? WHERE emp_id = ?";
+
+        const basic_salary = data.salary/2
+        const daily_rate = data.salary/26
+        const hourly_rate = daily_rate/8
+        const minute_rate = hourly_rate/60
+
+        let middle_initial = "";
+
+        if (data.middle_name.trim().length == 0){
+            middle_initial
+        }else{
+            middle_initial =  data.middle_name.charAt(0).toUpperCase() + "."
+        }
+        employee_name = data.last_name + ", " + data.first_name + " " + middle_initial
+
+        const values = [
+            employee_name, 
+            data.imagePath,
+            data.first_name, 
+            data.middle_name, 
+            data.last_name, 
+            data.salary, 
+            basic_salary, 
+            daily_rate, 
+            hourly_rate, 
+            minute_rate, 
+            data.emp_id
+        ]
+
+        return new Promise((onSuccess, onError) => {
+            conn.query(query, [...values], (err, result) => {
+                if (err){
+                    onError("Database Query Error: " + err.message)
+                }
+                else{
+                    onSuccess("Data has been updated successfully")
+                }
+            })
         })
     }
 }
